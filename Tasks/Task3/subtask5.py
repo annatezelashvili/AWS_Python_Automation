@@ -44,7 +44,6 @@ def download_prev_version(bucket_name, file_name):
         ExtraArgs={"VersionId": prev_version_id})
 
 
-
 def upload_prev_version(bucket_name, file_name ):
     s3.upload_file(new_file, bucket_name, file_name )
 
@@ -57,3 +56,4 @@ def main():
 if __name__ == '__main__':
     # enable_versioning("tezbucket13")
     main()
+

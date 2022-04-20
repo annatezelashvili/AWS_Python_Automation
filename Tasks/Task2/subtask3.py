@@ -2,6 +2,7 @@ import boto3
 
 s3 = boto3.client("s3")
 
+
 def bucket_exists(bucket_name):
     try:
         response = s3.head_bucket(Bucket=bucket_name)
@@ -19,12 +20,14 @@ def delete_bucket(bucket_name):
     print(response)
     print("Bucket has deleted ")
 
+
 def delete_bucket_with_validation(bucket_name):
 
     if bucket_exists(bucket_name):
         delete_bucket(bucket_name)
     else:
         print("Bucket does not exist")
+
 
 def main():
     delete_bucket_with_validation("prodzhenyabucket12")
