@@ -25,27 +25,26 @@ def create_vpc():
             vpc_id,
         ],
     )
-    add_name_to_resource(vpc_id, "Task9.2-VPC")
+    add_name_to_resource(vpc_id, "Task09.3-VPC")
     return vpc_id
 
 
-def create_subnet(vpc_id, cidr_block):
-    response = ec2_client.create_subnet(
-        CidrBlock=cidr_block,
-        VpcId=vpc_id
+def create_igw_and_attach_to_vpc(vpc_id):
+    response = ec2_client.create_internet_gateway()
+    igw_id = response.get("InternetGateway").get("InternetGatewayId")
+    add_name_to_resource(igw_id, "Task09.3-VPC-IGW")
+    response = ec2_client.attach_internet_gateway(
+        VpcId=vpc_id,
+        InternetGatewayId=igw_id
     )
-    subnet_id = response.get("Subnet").get("SubnetId")
-    add_name_to_resource(subnet_id, "Task9.2-VPC-SUBNET")
-    return subnet_id
+    return igw_id
 
 
 def main():
     vpc_id = create_vpc()
-    cidr_block = "10.10.1.0/24"
-    subnet_id = create_subnet(vpc_id, cidr_block)
-    print("Created Subnet ID is ", subnet_id)
+    igw_id = create_igw_and_attach_to_vpc(vpc_id)
+    print("IGW is created with ID", igw_id)
 
 
 if __name__ == '__main__':
     main()
-

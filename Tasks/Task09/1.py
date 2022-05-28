@@ -18,7 +18,7 @@ def create_vpc():
         Tags=[
             {
                 "Key": "Name",
-                "Value": "Task9.1-VPC"
+                "Value": "Task09.1-VPC"
             },
             {
                 "Key": "Creator",

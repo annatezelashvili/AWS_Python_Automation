@@ -17,7 +17,7 @@ def add_name_to_resource(resource_id, name):
 
 
 def create_vpc():
-    response = ec2_client.create_vpc(CidrBlock="10.10.0.0/16")
+    response = ec2_client.create_vpc(CidrBlock="10.23.0.0/16")
     vpc_id = response.get("Vpc").get("VpcId")
     waiter = ec2_client.get_waiter('vpc_available')
     waiter.wait(
@@ -25,41 +25,26 @@ def create_vpc():
             vpc_id,
         ],
     )
-    add_name_to_resource(vpc_id, "Task9.5-VPC")
+    add_name_to_resource(vpc_id, "Task06-07-VPC")
     return vpc_id
-
-
-def create_routing_table(vpc_id):
-    response = ec2_client.create_route_table(VpcId=vpc_id)
-    rtb_id = response.get("RouteTable").get("RouteTableId")
-    add_name_to_resource(rtb_id, "Task9.5-RTB")
-    return rtb_id
 
 
 def create_and_attach_igw(vpc_id):
     response = ec2_client.create_internet_gateway()
     igw_id = response.get("InternetGateway").get("InternetGatewayId")
-    add_name_to_resource(igw_id, "Task9.5-IGW")
-    response = ec2_client.attach_internet_gateway(
+    add_name_to_resource(igw_id, "Task06-07-VPCIGW")
+    ec2_client.attach_internet_gateway(
         VpcId=vpc_id,
         InternetGatewayId=igw_id
     )
     return igw_id
 
 
-def attach_igw_to_route_table(igw_id, rtb_id):
-    response = ec2_client.create_route(
-        DestinationCidrBlock='0.0.0.0/0',
-        GatewayId=igw_id,
-        RouteTableId=rtb_id,
-    )
-
-
 def main():
     vpc_id = create_vpc()
-    rtb_id = create_routing_table(vpc_id)
+    print("VPC created", vpc_id)
     igw_id = create_and_attach_igw(vpc_id)
-    attach_igw_to_route_table(igw_id, rtb_id)
+    print("IGW created and attached to VPC", igw_id)
 
 
 if __name__ == '__main__':
